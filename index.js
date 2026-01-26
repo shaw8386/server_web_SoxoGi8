@@ -12,6 +12,23 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ====================== 🔐 GI8 INTERNAL KEY GUARD ======================
+app.use((req, res, next) => {
+  // Cho phép health check
+  if (req.path === "/health") return next();
+
+  const key = req.headers["x-gi8-key"];
+
+  if (!key || key !== process.env.GI8_INTERNAL_KEY) {
+    return res.status(403).json({
+      error: "Forbidden",
+      message: "Missing or invalid x-gi8-key",
+    });
+  }
+
+  next();
+});
+
 // ====================== SERVE FRONTEND (/public) ======================
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
