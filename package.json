@@ -1,19 +1,23 @@
 {
-  "name": "xoso-proxy",
-  "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "start": "node index.js"
-  },
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "firebase-admin": "^12.0.0",
-    "jsonwebtoken": "^9.0.2",
-    "node-cron": "^3.0.3",
-    "node-fetch": "^3.3.2",
-    "pg": "^8.11.5"
+    "name": "kqxs-proxy",
+    "version": "1.0.0",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+      "start": "node index.js",
+      "get-data-xs": "node Get_DataXS_tructiep.js",
+      "get-data-xs:mn": "node Get_DataXS_tructiep.js mn",
+      "get-data-xs:mt": "node Get_DataXS_tructiep.js mt",
+      "get-data-xs:mb": "node Get_DataXS_tructiep.js mb"
+    },
+    "dependencies": {
+      "bcryptjs": "^2.4.3",
+      "cors": "^2.8.5",
+      "express": "^4.19.2",
+      "firebase-admin": "^12.0.0",
+      "jsonwebtoken": "^9.0.2",
+      "node-cron": "^3.0.3",
+      "node-fetch": "^3.3.2",
+      "pg": "^8.11.5"
+    }
   }
-}
