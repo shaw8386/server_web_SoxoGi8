@@ -122,20 +122,37 @@ app.post("/api/lottery/push-kqxs", async (req, res) => {
   }
   try {
     const { kqxs_data, region } = req.body;
-    if (!kqxs_data || typeof kqxs_data !== "object") {
+    if (kqxs_data == null || kqxs_data === "") {
       return res.status(400).json({
         error: "Invalid payload",
-        message: "kqxs_data (object) required. VD: { run, tinh, ntime, kq: { 13: {...}, 14: {...} } }",
+        message: "kqxs_data required (text từ js_m1/js_m2/js_m3 hoặc object đã parse)",
       });
     }
 
-    const { kqxsDataToDraws } = await import("./utils/minhNgocToXoso188.js");
+    const { parseMinhNgocJs, kqxsDataToDraws } = await import("./utils/minhNgocToXoso188.js");
     const regionKey = (region || "mn").toLowerCase();
     if (regionKey !== "mn" && regionKey !== "mt" && regionKey !== "mb") {
       return res.status(400).json({ error: "Invalid region", message: "region phải là mn | mt | mb" });
     }
 
-    const draws = kqxsDataToDraws(kqxs_data, regionKey);
+    let kqxsData = kqxs_data;
+    if (typeof kqxs_data === "string") {
+      const rawText = kqxs_data.trim();
+      kqxsData = parseMinhNgocJs(rawText, regionKey);
+      if (!kqxsData || typeof kqxsData.kq !== "object") {
+        return res.status(400).json({
+          error: "Parse failed",
+          message: "Không parse được kqxs từ text. Kiểm tra định dạng (VD: kqxs.mn={...} hoặc kqxs.mt={...} hoặc kqxs.mb={...})",
+        });
+      }
+    } else if (typeof kqxs_data !== "object") {
+      return res.status(400).json({
+        error: "Invalid payload",
+        message: "kqxs_data phải là text (string) hoặc object { run, tinh, ntime, kq }",
+      });
+    }
+
+    const draws = kqxsDataToDraws(kqxsData, regionKey);
     if (draws.length === 0) {
       return res.json({
         ok: true,
