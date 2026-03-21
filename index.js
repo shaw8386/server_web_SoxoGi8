@@ -139,12 +139,13 @@ app.post("/api/lottery/push-kqxs", async (req, res) => {
     if (typeof kqxs_data === "string") {
       const rawText = kqxs_data.trim();
       kqxsData = parseMinhNgocJs(rawText, regionKey);
-      if (!kqxsData || typeof kqxsData.kq !== "object") {
+      if (!kqxsData) {
         return res.status(400).json({
           error: "Parse failed",
           message: "Không parse được kqxs từ text. Kiểm tra định dạng (VD: kqxs.mn={...} hoặc kqxs.mt={...} hoặc kqxs.mb={...})",
         });
       }
+      if (!kqxsData.kq) kqxsData.kq = {};
     } else if (typeof kqxs_data !== "object") {
       return res.status(400).json({
         error: "Invalid payload",
